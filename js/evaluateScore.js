@@ -1,14 +1,15 @@
-function evaluate(board) {
+//有一点需要强调：alpha-beta剪枝过程中走棋的双方可能会变化，但估分的标准一直是以黑方即AI方为准，黑方希望估值最大，红方希望估值最小。
+function evaluate() {
     var score = 0;
-    score += SingleChessScore(board);
+    score += SingleChessScore();
     return score;
 }
 
-function SingleChessScore(board) {
+function SingleChessScore() {
     var score = 0;
     for (var j = 0; j < 10; ++j) {
         for (var i = 0; i < 9; ++i) {
-            var chess = board[j][i];
+            var chess = map[j][i];
             score += SearchScoreTable(chess, j, i);
         }
     }
@@ -17,29 +18,28 @@ function SingleChessScore(board) {
 
 function SearchScoreTable(chess, j, i) {
     if (chess == 0) return 0;
-    if (nowWho == 1) {
+    if (chess < 0) {//黑方棋子
         j = 9 - j;
         i = 8 - i;
-        chess *= -1;//敌方棋子与子方棋子对调
     }
     var plus = 1;
-    if (chess < 0) {
+    if (chess > 0) {//红方
         plus = -1;
         chess *= -1;
     }
-    if (chess == 1 || chess == 7) {
+    if (chess == -1 || chess == -7) {
         return plus * Jiang_Bing[j][i];
     }
-    if (chess == 5 || chess == 6) {
+    if (chess == -5 || chess == -6) {
         return plus * Shi_Xiang[j][i];
     }
-    if (chess == 4) {
+    if (chess == -4) {
         return plus * Ma[j][i];
     }
-    if (chess == 3) {
+    if (chess == -3) {
         return plus * Ju[j][i];
     }
-    if (chess == 2) {
+    if (chess == -2) {
         return plus * Pao[j][i];
     }
 

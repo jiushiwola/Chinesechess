@@ -3,7 +3,7 @@ $().ready(function(){
     putDef();
     showC();
     runNow=true;
-    //evaluate(map, 0);
+    console.log("begin: " + evaluate());
 });
 
 function Log(info){
