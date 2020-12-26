@@ -22,10 +22,9 @@ function cleanSt(){
     OnChoseNow=false;
 }
 function changePlayer(){
-    if(nowWho==0){
-        nowWho=1;
-    }else{
-        nowWho=0;
+    nowWho = 1 - nowWho;
+    if (nowWho == 1) {
+        AImove();
     }
     cleanSt();
 }
@@ -34,7 +33,7 @@ function showSt(j,i,t){
     cleanChose();//去掉阴影
     showChose(j,i,1);//选中棋子效果
     var tmap = WhereCan(j,i,t);//返回能走的位置，分为能吃和不能吃（即敌方棋子或空）
-    if(tmap!=null && tmap.length>0)
+    if(tmap!=null && tmap.length>0) {
         for(var q=0;q<tmap.length;q++){
             if(map[tmap[q][0]][tmap[q][1]]==0){
                 moveList.push(tmap[q]);
@@ -43,6 +42,7 @@ function showSt(j,i,t){
             }
             showChose(tmap[q][0],tmap[q][1],tmap[q][2]+2);
         }
+    }
     nowChoseC[0]=j;
     nowChoseC[1]=i;
     nowChoseC[2]=t;
