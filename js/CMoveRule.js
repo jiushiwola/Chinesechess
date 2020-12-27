@@ -8,22 +8,22 @@ function binMove(tmap,c,y,x){//0红 1黑
         w=y>4;
         step=1;
     }
-    if(w){//w现在表示是否过了河
-        if(y+step>=0&&y+step<map.length){
+    if(y+step>=0&&y+step<map.length){
+        if (map[y+step][x] >= 0 && c == 1 || map[y+step][x] <= 0 && c == 0) {
             var t1=[];
             t1[0]=y+step;
             t1[1]=x;
             tmap.push(t1);
         }
+        
+    }
+    if(w){//w现在表示是否过了河
+        
         var t2=[];var t3=[];
         t2[0]=y;t3[0]=y;
         t2[1]=x-1;t3[1]=x+1;
-        tmap.push(t2);tmap.push(t3);
-    }else{
-        var t=[];
-        t[0]=y+step;
-        t[1]=x;
-        tmap.push(t);
+        if (x - 1 >= 0 && (map[y][x-1] >= 0 && c == 1 || map[y][x-1] <= 0 && c == 0)) tmap.push(t2);
+        if (x + 1 < map.length && (map[y][x+1] >= 0 && c == 1 || map[y][x+1] <= 0 && c == 0)) tmap.push(t3);
     }
 }
 function paoMove(tmap,c,y,x){
@@ -33,7 +33,7 @@ function paoMove(tmap,c,y,x){
     paoMove_(tmap,3,c,y,x);
 }
 function paoMove_(tmap,d,c,y,x){//0上1左2下3右
-    var q= y,w= x,qi= 0,wi= 0,ci=0;//ci:0红 1黑
+    var q= y,w= x,qi= 0,wi= 0,ci=0;//c:0红 1黑
     if(c==0){
         ci=1;
     }else{
@@ -79,9 +79,10 @@ function paoMove_(tmap,d,c,y,x){//0上1左2下3右
                     t[0]=q;
                     t[1]=w;
                     tmap.push(t);
-                    ce=false;
-                    break;
+                    // ce=false;
+                    // break;
                 }
+                break;
             }
             ce=true;
         }
@@ -91,7 +92,7 @@ function paoMove_(tmap,d,c,y,x){//0上1左2下3右
 function juMove(tmap,c,y,x){
     for(var q=y;q>=0;q--){
         if(q==y)continue;
-        if(!fastMove(tmap,c,q,x))break;
+        if(!fastMove(tmap,c,q,x))break;//如果遇到阻挡，则该方向上停止搜索
     }
     for(var q=x;q>=0;q--){
         if(q==x)continue;
