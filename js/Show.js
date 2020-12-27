@@ -148,6 +148,9 @@ function cleanChose(){
 }
 function move(y,x,j,i,eat){
     var lastEat = getCText(j,i);
+    var lastEatVal = map[j][i];
+    var lastEater = getCText(y,x);
+    var lastEaterVal = map[y][x];
     onMove=true;
     if(eat==null)
         if(map[j][i]!=0){
@@ -185,9 +188,9 @@ function move(y,x,j,i,eat){
         var lastCanEat = (eat == true ? true : false);
         var lastMoveTo = [j,i];
         var lastMoveFrom = [y,x];
-        var lastEater = getCText(j,i);
+
         //console.log("lasteat: " + lastEat);
-        lastMove.push(lastMoveFrom, lastMoveTo, lastCanEat, lastEat, lastEater);
+        lastMove.push(lastMoveFrom, lastMoveTo, lastCanEat, lastEat, lastEater, lastEatVal, lastEaterVal);
         changePlayer();
         onMove=false;
     },700);
@@ -208,17 +211,20 @@ function eat(y,x,j,i){
 //以下内容与悔棋相关
 var lastMove = new Array();
 function back() {
+    if (nowWho != 0) return;
     if (lastMove.length == 0) {
         console.log("lastMove is empty!");
         return;
     }
     for (var t = 0; t < 2; ++t) {
+        var lastEaterVal = lastMove.pop();
+        var lastEatVal = lastMove.pop();
         var lastEater = lastMove.pop();
         var lastEat = lastMove.pop();
         var lastCanEat = lastMove.pop();
         var lastMoveTo = lastMove.pop();
         var lastMoveFrom = lastMove.pop();
-        if (lastCanEat) undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater);
+        if (lastCanEat) undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater, lastEatVal, lastEaterVal);
         else undoMove(lastMoveFrom, lastMoveTo, lastEater);
     }
     
@@ -247,13 +253,14 @@ function undoMove(lastMoveFrom, lastMoveTo, lastEater) {
         $("#CS"+y+"-"+x+" section").css({
             transform:""
         })
-    },10);
-    setTimeout(function(){
         onMove=false;
-    },700);
+    },10);
+    // setTimeout(function(){
+        
+    // },700);
 }
 
-function undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater) {
+function undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater, lastEatVal, lastEaterVal) {
     onMove = true;
     var y = lastMoveFrom[0];
     var x = lastMoveFrom[1];
@@ -266,24 +273,24 @@ function undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater) {
     }
     var cla1 = lastEater[1];
     var tex1 = lastEater[0];
-    map[y][x]=map[j][i];
-    map[j][i]=0;
+    map[y][x]=lastEaterVal;
+    map[j][i]=lastEatVal;
     $("#CS"+j+"-"+i).html(
         ""
     )
-    $("#CS"+y+"-"+x).html(//移动目的的的棋子的transfrom从有translate到无translate，实现从出发点平滑移动到目的点的效果。
+    $("#CS"+y+"-"+x).html(
             "<section class='C "+cla1+"' style='transform:translate("+(i-x)*45+"px,"+(j-y)*45+"px);'>"+tex1+"</section>"
     )
     setTimeout(function(){
         $("#CS"+y+"-"+x+" section").css({
             transform:""
         })
-    },10);
-    setTimeout(function(){
         $("#CS"+j+"-"+i).html(
             "<section class='C "+cla+"' >"+tex+"</section>"
         )
         onMove=false;
-    },700);
+        
+    },10);
+    
 }
 

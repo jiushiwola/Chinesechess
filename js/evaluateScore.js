@@ -2,6 +2,8 @@
 function evaluate() {
     var score = 0;
     score += SingleChessScore();
+    score += ChouJu();
+    score += ShuangPao();
     return score;
 }
 
@@ -23,12 +25,17 @@ function SearchScoreTable(chess, j, i) {
         i = 8 - i;
     }
     var plus = 1;
+    var dd = 1;
     if (chess > 0) {//红方
         plus = -1;
         chess *= -1;
+        dd = 0.5;
     }
-    if (chess == -1 || chess == -7) {
-        return plus * Jiang_Bing[j][i];
+    if (chess == -1 ) {
+        return plus * Bing[j][i];
+    }
+    if (chess == -7) {
+        return plus * Jiang[j][i] * dd;
     }
     if (chess == -5 || chess == -6) {
         return plus * Shi_Xiang[j][i];
@@ -45,7 +52,126 @@ function SearchScoreTable(chess, j, i) {
 
 }
 
-var Jiang_Bing = [
+function ChouJu() {
+    var score = 0;
+    //找出所有炮和车的位置
+    //找出将和帅的位置
+    var Paos = [];
+    var Jus = [];
+    var Kings = [];
+    for (var j = 0; j < 10; ++j) {
+        for (var i = 0; i < 9; ++i) {
+            var cur = Math.abs(map[j][i]);
+            if (cur == 2) Paos.push([j,i]);
+            else if (cur == 3) Jus.push([j,i]);
+            else if (cur == 7) Kings.push([j,i]);
+        }
+    }
+    //检测同行的抽车情况
+    for (var a = 0; a < Paos.length; ++a) {
+        var Pao = Paos[a];
+        for (var b = 0; b < Jus.length; ++b) {
+            var Ju = Jus[b];
+            if (map[Pao[0]][Pao[1]] * map[Ju[0]][Ju[1]] < 0 || Pao[0] != Ju[0]) continue;//炮和车同色且同行
+            for (var c = 0; c < Kings.length; ++c) {
+                var King = Kings[c];
+                if (map[Pao[0]][Pao[1]] * map[King[0]][King[1]] > 0 || Pao[0] != King[0]) continue;//炮和王不同色且同行
+                if (!((Pao[0] - Ju[0]) * (King[0] - Ju[0]) < 0)) continue;
+                var cnt = 0;
+                if (Pao[1] < King[1]) {
+                    for (var c = Pao[1] + 1; c < King[1]; ++c) {
+                        if (map[Pao[0]][c] != 0) cnt++;
+                    }
+                }
+                else {
+                    for (var c = Pao[1] - 1; c > King[1]; --c) {
+                        if (map[Pao[0]][c] != 0) cnt++;
+                    }
+                }
+                if (cnt == 2) {
+                    if (map[Pao[0]][Pao[1]] > 0) {
+                        score -= 300;
+                    }
+                    else {
+                        score += 70;
+                    }
+                }
+            }
+        }
+    }
+    //检测同列的抽车情况
+    for (var a = 0; a < Paos.length; ++a) {
+        var Pao = Paos[a];
+        for (var b = 0; b < Jus.length; ++b) {
+            var Ju = Jus[b];
+            if (map[Pao[0]][Pao[1]] * map[Ju[0]][Ju[1]] < 0 || Pao[1] != Ju[1]) continue;//炮和车同色且同行
+            for (var c = 0; c < Kings.length; ++c) {
+                var King = Kings[c];
+                if (map[Pao[0]][Pao[1]] * map[King[0]][King[1]] > 0 || Pao[1] != King[1]) continue;//炮和王不同色且同行
+                if (!((Pao[1] - Ju[1]) * (King[1] - Ju[1]) < 0)) continue;
+                var cnt = 0;
+                if (Pao[0] < King[0]) {
+                    for (var c = Pao[0] + 1; c < King[0]; ++c) {
+                        if (map[c][Pao[1]] != 0) cnt++;
+                    }
+                }
+                else {
+                    for (var c = Pao[0] - 1; c > King[0]; --c) {
+                        if (map[c][Pao[1]] != 0) cnt++;
+                    }
+                }
+                if (cnt == 2) {
+                    if (map[Pao[0]][Pao[1]] > 0) {
+                        score -= 300;
+                    }
+                    else {
+                        score += 70;
+                    }
+                }
+            }
+        }
+    }
+    return score;
+
+}
+function ShuangPao() {
+    var score = 0;
+    //找出所有炮的位置
+    //找出将和帅的位置
+    var redPaos = [];
+    var blackPaos = [];
+    var Jiang = [];
+    var Shuai = [];
+    for (var j = 0; j < 10; ++j) {
+        for (var i = 0; i < 9; ++i) {
+            var cur = map[j][i];
+            if (cur == 2) redPaos.push([j,i]);
+            else if (cur == -2) blackPaos.push([j,i]);
+            else if (cur == 7) Jiang = [j,i];
+            else if (cur == -7) Shuai = [j,i];
+        }
+    }
+    //只检测更常见的在列上重炮将军
+    //console.log(Shuai);
+    if (redPaos.length == 2 && redPaos[0][1] == redPaos[1][1] && redPaos[0][1] == Shuai[1]) {
+        var cnt = 0;
+        for (var t = Math.min(redPaos[0][0], redPaos[1][0]) - 1; t > Shuai[0]; --t) {
+            if (map[t][redPaos[0][1]] != 0) cnt++;
+        }
+        if (cnt == 1) score -= 500;
+    }
+    if (blackPaos.length == 2 && blackPaos[0][1] == blackPaos[1][1] && blackPaos[0][1] == Jiang[1]) {
+        var cnt = 0;
+        for (var t = Math.min(blackPaos[0][0], blackPaos[1][0]) - 1; t > Jiang[0]; --t) {
+            if (map[t][blackPaos[0][1]] != 0) cnt++;
+        }
+        if (cnt == 1) score += 300;
+    }
+
+    return score;
+}
+
+var Bing = [
     [9,  9,  9, 11, 13, 11,  9,  9,  9],
     [19, 24, 34, 42, 44, 42, 34, 24, 19],
     [19, 24, 32, 37, 37, 37, 32, 24, 19],
@@ -53,9 +179,22 @@ var Jiang_Bing = [
     [14, 18, 20, 27, 29, 27, 20, 18, 14],
     [7,  0, 13,  0, 16,  0, 13,  0,  7],
     [7,  0,  7,  0, 15,  0,  7,  0,  7],
-    [0,  0,  0,  400,  400,  400,  0,  0,  0],
-    [0,  0,  0,  430,  450,  430,  0,  0,  0],
-    [0,  0,  0, 450, 500, 450,  0,  0,  0]
+    [0,  0,  0,  0,  0,  0,  0,  0,  0],
+    [0,  0,  0,  0,  0,  0,  0,  0,  0],
+    [0,  0,  0,  0,  0,  0,  0,  0,  0]
+];
+
+var Jiang = [
+    [0,  0,  0,  12000,  12000,  12000,  0,  0,  0],  
+    [0,  0,  0,  12000,  12000,  12000,  0,  0,  0],  
+    [0,  0,  0,  12000,  12000,  12000,  0,  0,  0],  
+    [0,  0,  0,  0,  0,  0,  0,  0,  0],  
+    [0,  0,  0,  0,  0,  0,  0,  0,  0],  
+    [0,  0,  0,  0,  0,  0,  0,  0,  0],  
+    [0,  0,  0,  0,  0,  0,  0,  0,  0],  
+    [0,  0,  0,  9900,  9900,  9900,  0,  0,  0],
+    [0,  0,  0,  9930,  9950,  9930,  0,  0,  0],
+    [0,  0,  0, 9950, 10000, 9950,  0,  0,  0]
 ];
 
 var Shi_Xiang = [
@@ -82,7 +221,7 @@ var Ma = [
     [92, 94, 98, 95, 98, 95, 98, 94, 92],
     [93, 92, 94, 95, 92, 95, 94, 92, 93],
     [85, 90, 92, 93, 78, 93, 92, 90, 85],
-    [88, 85, 90, 88, 90, 88, 90, 85, 88]
+    [88, 50, 90, 88, 90, 88, 90, 50, 88]//马的两个初始位置权值设小一点，防止AI的炮“盲目攻击马”
 ];
 
 var Ju = [

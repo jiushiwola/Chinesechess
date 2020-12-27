@@ -37,64 +37,64 @@
     transform: scale(1.1,1.1);
 }*/
 .BR{
-    border-color: #6ec672;
-    color: #f3f3f3;
-    background-color: #46804a;
+    border-color:  #820725;
+    color: #820725;
+    background-color: rgba(0, 0, 0, 0.25);
 }
 .BB{
-    border-color: #6ec672;
+    border-color: #232323;
     color: #232323;
-    background-color: #46804a;
+    background-color:  rgba(0, 0, 0, 0.25);
 }
 .PR{
-    border-color: #c69c13;
-    color: #f3f3f3;
-    background-color: #805435;
+    border-color:  #820725;
+    color: #820725;
+    background-color:  rgba(0, 0, 0, 0.25);
 }
 .PB{
-    border-color: #c69c13;
+    border-color:  #232323;
     color: #232323;
-    background-color: #805435;
+    background-color: rgba(0, 0, 0, 0.25);
 }
 .JR{
-    border-color: #c6385a;
-    color: #f3f3f3;
-    background-color: rgba(128, 43, 34, 0.75);
+    border-color: #820725;
+    color: #820725;
+    background-color: rgba(0, 0, 0, 0.25);
 }
 .JB{
-    border-color: #c6385a;
+    border-color:  #232323;
     color: #232323;
-    background-color: rgba(128, 43, 34, 0.75);
+    background-color: rgba(0, 0, 0, 0.25);
 }
 .MR{
-    border-color: #c6a902;
-    color: #f3f3f3;
-    background-color: #806328;
+    border-color: #820725;
+    color:  #820725;
+    background-color:  rgba(0, 0, 0, 0.25);
 }
 .MB{
-    border-color: #c6a902;
+    border-color:  #232323;
     color: #232323;
-    background-color: #806328;
+    background-color: rgba(0, 0, 0, 0.25);
 }
 .XR{
-    border-color: #2c806e;
-    color: #f3f3f3;
-    background-color: #5d9eb2;
+    border-color:  #820725;
+    color:  #820725;
+    background-color:  rgba(0, 0, 0, 0.25);
 }
 .XB{
-    border-color: #2c806e;
+    border-color:  #232323;
     color: #232323;
-    background-color: #5d9eb2;
+    background-color:  rgba(0, 0, 0, 0.25);
 }
 .SR{
-    border-color: #bebebe;
+    border-color:  #820725;
     color: #820725;
-    background-color: rgba(216, 216, 216, 0.95);
+    background-color: rgba(0, 0, 0, 0.25);
 }
 .SB{
-    border-color: #bebebe;
+    border-color: #232323;
     color: #232323;
-    background-color: rgba(216, 216, 216, 0.95);
+    background-color: rgba(0, 0, 0, 0.25);
 }
 .J{
     border-color: #820725;
