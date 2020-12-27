@@ -106,3 +106,27 @@
     color: #232323;
     background-color: rgba(0, 0, 0, 0.25);
 }
+
+
+#board #back{
+    width: 50px;
+    height: 50px;
+    position: relative;
+    top: -120%;
+    left: 120%;
+}
+
+
+#board #back article{
+    width: 44px;
+    height: 44px;
+    float: left;
+    transition: box-shadow 0.35s,outline 0.35s,border 0.35s,transform 0.35s;
+    border: 3px solid rgba(0, 0, 0, 0);
+}
+#board #back article:hover{
+    box-shadow:0 0 25pt rgba(0, 0, 0, 0.35);
+    border: 3px double rgba(0, 0, 0, 0.15);
+    transform: scale(1.1,1.1);
+}
+

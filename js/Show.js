@@ -147,6 +147,7 @@ function cleanChose(){
     })
 }
 function move(y,x,j,i,eat){
+    var lastEat = getCText(j,i);
     onMove=true;
     if(eat==null)
         if(map[j][i]!=0){
@@ -169,11 +170,11 @@ function move(y,x,j,i,eat){
         Log(y+"-"+x+" "+tex+" 吃"+j+"-"+i+" "+getCText(j,i)[0]);
     map[j][i]=map[y][x];
     map[y][x]=0;
-    $("#CS"+j+"-"+i).html(
-            "<section class='C "+cla+"' style='transform:translate("+(x-i)*45+"px,"+(y-j)*45+"px);'>"+tex+"</section>"
-    )
     $("#CS"+y+"-"+x).html(
         ""
+    )
+    $("#CS"+j+"-"+i).html(//移动目的的的棋子的transfrom从有translate到无translate，实现从出发点平滑移动到目的点的效果。
+            "<section class='C "+cla+"' style='transform:translate("+(x-i)*45+"px,"+(y-j)*45+"px);'>"+tex+"</section>"
     )
     setTimeout(function(){
         $("#CS"+j+"-"+i+" section").css({
@@ -181,9 +182,16 @@ function move(y,x,j,i,eat){
         })
     },10);
     setTimeout(function(){
+        var lastCanEat = (eat == true ? true : false);
+        var lastMoveTo = [j,i];
+        var lastMoveFrom = [y,x];
+        var lastEater = getCText(j,i);
+        //console.log("lasteat: " + lastEat);
+        lastMove.push(lastMoveFrom, lastMoveTo, lastCanEat, lastEat, lastEater);
         changePlayer();
         onMove=false;
     },700);
+    
 }
 
 function eat(y,x,j,i){
@@ -195,3 +203,87 @@ function eat(y,x,j,i){
         move(y,x,j,i,true);
     },700)
 }
+
+
+//以下内容与悔棋相关
+var lastMove = new Array();
+function back() {
+    if (lastMove.length == 0) {
+        console.log("lastMove is empty!");
+        return;
+    }
+    for (var t = 0; t < 2; ++t) {
+        var lastEater = lastMove.pop();
+        var lastEat = lastMove.pop();
+        var lastCanEat = lastMove.pop();
+        var lastMoveTo = lastMove.pop();
+        var lastMoveFrom = lastMove.pop();
+        if (lastCanEat) undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater);
+        else undoMove(lastMoveFrom, lastMoveTo, lastEater);
+    }
+    
+}
+
+function undoMove(lastMoveFrom, lastMoveTo, lastEater) {
+    onMove = true;
+    var y = lastMoveFrom[0];
+    var x = lastMoveFrom[1];
+    var j = lastMoveTo[0];
+    var i = lastMoveTo[1];
+    var cla, tex;
+    if (lastEater != null) {
+        cla = lastEater[1];
+        tex = lastEater[0];
+    }
+    map[y][x]=map[j][i];
+    map[j][i]=0;
+    $("#CS"+j+"-"+i).html(
+        ""
+    )
+    $("#CS"+y+"-"+x).html(//移动目的的的棋子的transfrom从有translate到无translate，实现从出发点平滑移动到目的点的效果。
+            "<section class='C "+cla+"' style='transform:translate("+(i-x)*45+"px,"+(j-y)*45+"px);'>"+tex+"</section>"
+    )
+    setTimeout(function(){
+        $("#CS"+y+"-"+x+" section").css({
+            transform:""
+        })
+    },10);
+    setTimeout(function(){
+        onMove=false;
+    },700);
+}
+
+function undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater) {
+    onMove = true;
+    var y = lastMoveFrom[0];
+    var x = lastMoveFrom[1];
+    var j = lastMoveTo[0];
+    var i = lastMoveTo[1];
+    var cla, tex;
+    if (lastEat != null) {
+        cla = lastEat[1];
+        tex = lastEat[0];
+    }
+    var cla1 = lastEater[1];
+    var tex1 = lastEater[0];
+    map[y][x]=map[j][i];
+    map[j][i]=0;
+    $("#CS"+j+"-"+i).html(
+        ""
+    )
+    $("#CS"+y+"-"+x).html(//移动目的的的棋子的transfrom从有translate到无translate，实现从出发点平滑移动到目的点的效果。
+            "<section class='C "+cla1+"' style='transform:translate("+(i-x)*45+"px,"+(j-y)*45+"px);'>"+tex1+"</section>"
+    )
+    setTimeout(function(){
+        $("#CS"+y+"-"+x+" section").css({
+            transform:""
+        })
+    },10);
+    setTimeout(function(){
+        $("#CS"+j+"-"+i).html(
+            "<section class='C "+cla+"' >"+tex+"</section>"
+        )
+        onMove=false;
+    },700);
+}
+

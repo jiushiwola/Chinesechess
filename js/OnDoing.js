@@ -22,8 +22,10 @@ function cleanSt(){
     OnChoseNow=false;
 }
 function changePlayer(){
-    nowWho = 1 - nowWho;
+    if (nowWho == 0) nowWho = 1;
+    else nowWho = 0;
     if (nowWho == 1) {
+        nowWho = 2;
         AImove();
     }
     cleanSt();
@@ -64,7 +66,7 @@ function onChoseC(j,i,t){
                 showSt(j, i, t);
             }
         }
-        else {
+        else if (nowWho == 1){
             if (t > 0) return;
             else {
                 showSt(j, i, t);

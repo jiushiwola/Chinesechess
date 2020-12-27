@@ -13,7 +13,7 @@ var AIfrom = [];
 var AIto = [];
 var AIcan_eat = false;
 function alpha_beta(depth, alpha, beta) {
-    if (depth >= 6) return evaluate(map);
+    if (depth >= 5) return evaluate(map);
     for (var j = 0; j < 10; ++j) {
         for (var i = 0; i < 9; ++i) {
             if ((depth & 1) == 1 && map[j][i] < 0 || (depth & 1) == 0 && map[j][i] > 0) {//哪些棋子能走
