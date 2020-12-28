@@ -89,8 +89,9 @@ function ChouJu() {
                     }
                 }
                 if (cnt == 2) {
+                    console.log("检测到抽车");
                     if (map[Pao[0]][Pao[1]] > 0) {
-                        score -= 300;
+                        score -= 1000;
                     }
                     else {
                         score += 70;
@@ -121,8 +122,9 @@ function ChouJu() {
                     }
                 }
                 if (cnt == 2) {
+                    console.log("检测到抽车");
                     if (map[Pao[0]][Pao[1]] > 0) {
-                        score -= 300;
+                        score -= 1000;
                     }
                     else {
                         score += 70;
@@ -155,17 +157,23 @@ function ShuangPao() {
     //console.log(Shuai);
     if (redPaos.length == 2 && redPaos[0][1] == redPaos[1][1] && redPaos[0][1] == Shuai[1]) {
         var cnt = 0;
-        for (var t = Math.min(redPaos[0][0], redPaos[1][0]) - 1; t > Shuai[0]; --t) {
+        for (var t = Math.max(redPaos[0][0], redPaos[1][0]) - 1; t > Shuai[0]; --t) {
             if (map[t][redPaos[0][1]] != 0) cnt++;
         }
-        if (cnt == 1) score -= 500;
+        if (cnt == 1) {
+            console.log("检测到双炮将");
+            score -= 1500;
+        }
     }
     if (blackPaos.length == 2 && blackPaos[0][1] == blackPaos[1][1] && blackPaos[0][1] == Jiang[1]) {
         var cnt = 0;
-        for (var t = Math.min(blackPaos[0][0], blackPaos[1][0]) - 1; t > Jiang[0]; --t) {
+        for (var t = Math.min(blackPaos[0][0], blackPaos[1][0]) + 1; t < Jiang[0]; ++t) {
             if (map[t][blackPaos[0][1]] != 0) cnt++;
         }
-        if (cnt == 1) score += 300;
+        if (cnt == 1) {
+            console.log("检测到双炮将");
+            score += 500;
+        }
     }
 
     return score;

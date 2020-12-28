@@ -211,6 +211,7 @@ function eat(y,x,j,i){
 //以下内容与悔棋相关
 var lastMove = new Array();
 function back() {
+    if (onMove) return;
     if (nowWho != 0) return;
     if (lastMove.length == 0) {
         console.log("lastMove is empty!");
@@ -231,6 +232,7 @@ function back() {
 }
 
 function undoMove(lastMoveFrom, lastMoveTo, lastEater) {
+
     onMove = true;
     var y = lastMoveFrom[0];
     var x = lastMoveFrom[1];
@@ -281,13 +283,14 @@ function undoEat(lastMoveFrom, lastMoveTo, lastEat, lastEater, lastEatVal, lastE
     $("#CS"+y+"-"+x).html(
             "<section class='C "+cla1+"' style='transform:translate("+(i-x)*45+"px,"+(j-y)*45+"px);'>"+tex1+"</section>"
     )
+    $("#CS"+j+"-"+i).html(
+        "<section class='C "+cla+"' >"+tex+"</section>"
+    )
     setTimeout(function(){
         $("#CS"+y+"-"+x+" section").css({
             transform:""
         })
-        $("#CS"+j+"-"+i).html(
-            "<section class='C "+cla+"' >"+tex+"</section>"
-        )
+        
         onMove=false;
         
     },10);
