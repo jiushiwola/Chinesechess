@@ -217,7 +217,7 @@ function back() {
         console.log("lastMove is empty!");
         return;
     }
-    for (var t = 0; t < 2; ++t) {
+    for (var t = 0; t < 2 && lastMove.length > 0; ++t) {
         var lastEaterVal = lastMove.pop();
         var lastEatVal = lastMove.pop();
         var lastEater = lastMove.pop();

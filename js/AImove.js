@@ -30,14 +30,23 @@ function alpha_beta(depth, alpha, beta) {
                         ret = alpha_beta(depth + 1, alpha, beta);
                         if (depth & 1 == 1) {
                             if (ret > alpha) {
-                                alpha = ret;
+                                
                                 if (depth == 1) {
+                                    console.log(j + '-' + i + getCText(dest[0],dest[1])[0] + "移动到 " + dest[0] + '-' + dest[1])
+                                    //如果新的最好结果比原最好结果只大了5分以内，以某种概率保持原最好结果，以提高随机性
+                                    if (ret - alpha < 5 && Math.random() > 0.8) {
+                                        console.log("跨过最优解法");
+                                        map[j][i] = map[dest[0]][dest[1]];
+                                        map[dest[0]][dest[1]] = tmp;
+                                        continue;
+                                    }
                                     AIfrom[0] = j;
                                     AIfrom[1] = i;
                                     AIto[0] = dest[0];
                                     AIto[1] = dest[1];
                                     AIcan_eat = !(tmp == 0);
                                 }
+                                alpha = ret;
                             }
                             
                             //console.log(j + " " + i + " " + "alpha: " + alpha);
@@ -61,7 +70,7 @@ function alpha_beta(depth, alpha, beta) {
 
 
 
-//V1.0 贪心算法，暂时假设AI是黑方
+// V1.0 贪心算法，暂时假设AI是黑方
 // function AImove() {
 //     var max_score = -100000000;
 //     var from = [];

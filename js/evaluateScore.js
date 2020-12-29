@@ -76,7 +76,7 @@ function ChouJu() {
             for (var c = 0; c < Kings.length; ++c) {
                 var King = Kings[c];
                 if (map[Pao[0]][Pao[1]] * map[King[0]][King[1]] > 0 || Pao[0] != King[0]) continue;//炮和王不同色且同行
-                if (!((Pao[0] - Ju[0]) * (King[0] - Ju[0]) < 0)) continue;
+                if (!((Pao[1] - Ju[1]) * (King[1] - Ju[1]) < 0)) continue;
                 var cnt = 0;
                 if (Pao[1] < King[1]) {
                     for (var c = Pao[1] + 1; c < King[1]; ++c) {
@@ -89,11 +89,12 @@ function ChouJu() {
                     }
                 }
                 if (cnt == 2) {
-                    console.log("检测到抽车");
                     if (map[Pao[0]][Pao[1]] > 0) {
+                        //console.log("检测到红方抽车 行");
                         score -= 1000;
                     }
                     else {
+                        //console.log("检测到黑方抽车 行");
                         score += 70;
                     }
                 }
@@ -109,7 +110,7 @@ function ChouJu() {
             for (var c = 0; c < Kings.length; ++c) {
                 var King = Kings[c];
                 if (map[Pao[0]][Pao[1]] * map[King[0]][King[1]] > 0 || Pao[1] != King[1]) continue;//炮和王不同色且同行
-                if (!((Pao[1] - Ju[1]) * (King[1] - Ju[1]) < 0)) continue;
+                if (!((Pao[0] - Ju[0]) * (King[0] - Ju[0]) < 0)) continue;
                 var cnt = 0;
                 if (Pao[0] < King[0]) {
                     for (var c = Pao[0] + 1; c < King[0]; ++c) {
@@ -121,12 +122,13 @@ function ChouJu() {
                         if (map[c][Pao[1]] != 0) cnt++;
                     }
                 }
-                if (cnt == 2) {
-                    console.log("检测到抽车");
+                if (cnt == 2) {    
                     if (map[Pao[0]][Pao[1]] > 0) {
+                        //console.log("检测到红方抽车 列");
                         score -= 1000;
                     }
                     else {
+                        //console.log("检测到黑方抽车 列");
                         score += 70;
                     }
                 }
@@ -227,7 +229,7 @@ var Ma = [
     [90,100, 99,103,104,103, 99,100, 90],
     [90, 98,101,102,103,102,101, 98, 90],
     [92, 94, 98, 95, 98, 95, 98, 94, 92],
-    [93, 92, 94, 95, 92, 95, 94, 92, 93],
+    [90, 92, 95, 95, 92, 95, 95, 92, 90],
     [85, 90, 92, 93, 78, 93, 92, 90, 85],
     [88, 50, 90, 88, 90, 88, 90, 50, 88]//马的两个初始位置权值设小一点，防止AI的炮“盲目攻击马”
 ];

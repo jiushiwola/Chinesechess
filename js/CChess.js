@@ -4,6 +4,7 @@ $().ready(function(){
     showC();
     runNow=true;
     console.log("begin: " + evaluate());
+    //AImove();
 });
 
 function Log(info){
@@ -23,7 +24,6 @@ function LogError(info){
 var map=[];
 var runNow=false;
 var DeBug=true;
-
 function putDef(){
     map[0][0]=-3; map[9][0]=3;
     map[0][1]=-4; map[9][1]=4;
